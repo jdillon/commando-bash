@@ -154,7 +154,7 @@ options:
   find "$releasedir"
 
   setup="$releasedir/setup.sh"
-  bash "$setup" --verbose "$basedir"
+  bash "$setup" --verbose --project "$basedir"
 
   rm -rf "$tmpdir"
 }

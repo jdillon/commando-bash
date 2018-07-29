@@ -90,6 +90,8 @@ options:
 
   cd "$basedir"
 
+  projectdir=''
+
   # parse options and collect arguments
   local -a arguments
   for opt in "$@"; do
@@ -101,6 +103,10 @@ options:
         ;;
       -v|--verbose)
         verbose=true
+        shift
+        ;;
+      -p|--project)
+        projectdir="$1"
         shift
         ;;
       -*)
@@ -128,6 +134,7 @@ options:
     log "Bash: $BASH $BASH_VERSINFO $BASH_VERSION"
     log "Base name: $basename"
     log "Base directory: $basedir"
+    log "Project directory: $projectdir"
   fi
 
   usage
