@@ -106,8 +106,8 @@ options:
         shift
         ;;
       -p|--project)
-        projectdir="$1"
-        shift
+        projectdir="$2"
+        shift; shift
         ;;
       -*)
         die "Unknown option: $opt"
