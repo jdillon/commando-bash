@@ -146,7 +146,7 @@ options:
 
   setup="$releasedir/setup.sh"
 
-  # HACK: testing
+  # HACK: testin
   echo '----8<---'
   cat "$setup"
   echo '---->----'

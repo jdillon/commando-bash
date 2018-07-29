@@ -12,7 +12,8 @@ function __setup {
     log "Project directory: $projectdir"
   fi
 
-  echo "cp -v $releasedir/commando.sh $projectdir"
-  echo "mkdir -v $projectdir/.commando"
-  echo "cp -vr $releasedir/.commando/* $projectdir/.commando"
+  cp -v $releasedir/commando.sh $projectdir
+  
+  mkdir -v $projectdir/.commando
+  cp -vr $releasedir/.commando/* $projectdir/.commando
 }
