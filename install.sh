@@ -142,6 +142,7 @@ options:
 
   setup="$releasedir/setup.sh"
   source "$setup"
+  __setup
 
   rm -rf "$tmpdir"
 }
