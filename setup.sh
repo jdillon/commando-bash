@@ -75,69 +75,16 @@ function __main {
     $0 "$@"
   }
 
-  # display usage and exit
-  function usage {
-    printf "\nusage: $basename [options]
-
-options:
-  -h,--help       Show usage
-  -v,--verbose    Verbose output
-  --              Stop processing options
-\n"
-
-    exit 2
-  }
-
   cd "$basedir"
-
-  projectdir=''
-
-  # parse options and collect arguments
-  local -a arguments
-  for opt in "$@"; do
-    local consume_remaining=false
-
-    case $opt in
-      -h|--help)
-        usage
-        ;;
-      -v|--verbose)
-        verbose=true
-        shift
-        ;;
-      -p|--project)
-        projectdir="$2"
-        shift; shift
-        ;;
-      -*)
-        die "Unknown option: $opt"
-        ;;
-      --)
-        shift
-        consume_remaining=true
-        ;;
-      *)
-        consume_remaining=true
-        ;;
-    esac
-
-    if [ "$consume_remaining" = 'true' ]; then
-      for extra in "$@"; do
-        arguments+=("$1")
-        shift
-      done
-      break
-    fi
-  done
 
   if ${verbose}; then
     log "Bash: $BASH $BASH_VERSINFO $BASH_VERSION"
     log "Base name: $basename"
     log "Base directory: $basedir"
-    log "Project directory: $projectdir"
+    log "Project directory: $COMMANDO_PROJECT"
   fi
 
-  usage
+  # TODO
 }
 
 #
