@@ -7,18 +7,15 @@ function __setup {
   local releasedir="$1"
   local projectdir="$2"
 
+  local verbose_options=''
   if ${verbose}; then
+    verbose_options='-v'
     log "Release directory: $releasedir"
     log "Project directory: $projectdir"
   fi
 
-  cp -v "$releasedir/commando.sh" "$projectdir"
-  chmod -v +x "$projectdir/commando.sh"
+  cp ${verbose_options} "$releasedir/commando.sh" "$projectdir"
+  chmod ${verbose_options} +x "$projectdir/commando.sh"
 
-  cp -vr "$releasedir/.commando" "$projectdir/"
-
-  # HACK: testing
-  echo '----8<----'
-  find "$projectdir"
-  echo '---->8----'
+  cp ${verbose_options} -r "$releasedir/.commando" "$projectdir/"
 }
