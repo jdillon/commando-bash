@@ -77,8 +77,8 @@ options:
 
   cd "$basedir"
 
-  baseurl='https://github.com/jdillon/commando-bash'
-  version='installer'
+  local baseurl='https://github.com/jdillon/commando-bash'
+  local version='installer'
 
   # parse options and collect arguments
   local -a arguments
@@ -114,8 +114,8 @@ options:
     fi
   done
 
-  disturl="$baseurl/archive/${version}.tar.gz"
-  tmpdir=`mktemp -d`
+  local disturl="$baseurl/archive/${version}.tar.gz"
+  local tmpdir=`mktemp -d`
 
   if ${verbose}; then
     log "Bash: $BASH $BASH_VERSINFO $BASH_VERSION"
@@ -127,29 +127,29 @@ options:
     log "Temp directory: $tmpdir"
   fi
 
-  distfile="$tmpdir/dist.tgz"
+  local distfile="$tmpdir/dist.tgz"
   log "Distribution archive: $distfile"
   curl --location --silent --output "$distfile" "$disturl"
 
-  distdir="$tmpdir/dist"
+  local distdir="$tmpdir/dist"
   log "Distribution directory: $distdir"
   mkdir "$distdir"
   tar -xzf "$distfile" -C "$distdir"
 
-  releasedir="$distdir/commando-bash-$version"
+  local releasedir="$distdir/commando-bash-$version"
   log "Release directory: $releasedir"
 
   # HACK: testing
-  echo '----8<---'
+  echo '----8<----'
   find "$releasedir"
-  echo '---->----'
+  echo '---->8----'
 
-  setup="$releasedir/setup.sh"
+  local setup="$releasedir/setup.sh"
 
-  # HACK: testin
-  echo '----8<---'
+  # HACK: testing
+  echo '----8<----'
   cat "$setup"
-  echo '---->----'
+  echo '---->8----'
 
   source "$setup"
   __setup "$releasedir" "$basedir"
