@@ -85,6 +85,8 @@ function __main {
   fi
 
   # TODO
+
+  echo "HERE"
 }
 
 #

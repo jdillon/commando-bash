@@ -156,7 +156,7 @@ options:
   setup="$releasedir/setup.sh"
   export COMMANDO_PROJECT="$basedir"
   export COMMANDO_VERBOSE="$verbose"
-  bash "$setup" --verbose
+  bash "$setup"
 
   rm -rf "$tmpdir"
 }
