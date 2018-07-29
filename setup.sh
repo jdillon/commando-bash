@@ -4,8 +4,12 @@
 #
 
 function __setup {
+  local releasedir="$1"
+  local projectdir="$2"
+
   if ${verbose}; then
-    log "Project directory: $COMMANDO_PROJECT"
+    log "Release directory: $releasedir"
+    log "Project directory: $projectdir"
   fi
 
   # TODO
