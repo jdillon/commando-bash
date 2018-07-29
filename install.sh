@@ -138,9 +138,19 @@ options:
 
   releasedir="$distdir/commando-bash-$version"
   log "Release directory: $releasedir"
+
+  # HACK: testing
+  echo '----8<---'
   find "$releasedir"
+  echo '---->----'
 
   setup="$releasedir/setup.sh"
+
+  # HACK: testing
+  echo '----8<---'
+  cat "$setup"
+  echo '---->----'
+
   source "$setup"
   __setup "$releasedir" "$basedir"
 
