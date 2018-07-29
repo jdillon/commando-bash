@@ -12,7 +12,7 @@ function __setup {
     log "Project directory: $projectdir"
   fi
 
-  # TODO
-
-  echo "HERE"
+  echo "cp -v $releasedir/commando.sh $projectdir"
+  echo "mkdir -v $projectdir/.commando"
+  echo "cp -vr $releasedir/.commando/* $projectdir/.commando"
 }
