@@ -13,7 +13,7 @@ function __setup {
   fi
 
   cp -v "$releasedir/commando.sh" "$projectdir"
-  chmod +x "$projectdir/commando.sh"
+  chmod -v +x "$projectdir/commando.sh"
 
   cp -vr "$releasedir/.commando" "$projectdir/"
 
