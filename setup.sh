@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#@IgnoreInspection BashAddShebang
 #
-# Commando setup.
+# Commando setup action.
 #
 
 function __setup {
@@ -14,7 +14,7 @@ function __setup {
 
   cp -v "$releasedir/commando.sh" "$projectdir"
   chmod +x "$projectdir/commando.sh"
-  
+
   cp -vr "$releasedir/.commando" "$projectdir/"
 
   # HACK: testing
