@@ -139,18 +139,13 @@ options:
   local releasedir="$distdir/commando-bash-$version"
   log "Release directory: $releasedir"
 
-  # HACK: testing
-  echo '----8<----'
-  find "$releasedir"
-  echo '---->8----'
+  if ${verbose}; then
+    log '----8<----'
+    find "$releasedir"
+    log '---->8----'
+  fi
 
   local setup="$releasedir/setup.sh"
-
-  # HACK: testing
-  echo '----8<----'
-  cat "$setup"
-  echo '---->8----'
-
   source "$setup"
   __setup "$releasedir" "$basedir"
 
