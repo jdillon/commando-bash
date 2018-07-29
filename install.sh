@@ -78,7 +78,7 @@ options:
   cd "$basedir"
 
   local baseurl='https://github.com/jdillon/commando-bash'
-  local version='installer'
+  local version='master'
 
   # parse options and collect arguments
   local -a arguments
