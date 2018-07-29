@@ -176,7 +176,7 @@ function __command_system {
 #
 
 function __main {
-  # resolve this script name; ie. 'commando'
+  # resolve this script name
   basename=$(basename $0)
 
   # determine fully-qualified base directory
