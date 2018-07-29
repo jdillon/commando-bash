@@ -91,7 +91,7 @@ options:
   cd "$basedir"
 
   baseurl='https://github.com/jdillon/commando-bash'
-  version='master'
+  version='installer'
 
   # parse options and collect arguments
   local -a arguments
@@ -152,6 +152,9 @@ options:
   releasedir="$distdir/commando-bash-$version"
   log "Release directory: $releasedir"
   find "$releasedir"
+
+  setup="$releasedir/setup.sh"
+  bash "$setup" --verbose "$basedir"
 
   rm -rf "$tmpdir"
 }
