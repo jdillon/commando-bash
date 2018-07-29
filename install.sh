@@ -13,24 +13,16 @@ set -o nounset
 function __output_helpers {
   font_bold=''
   font_normal=''
-  font_underline=''
-  font_standout=''
   if [ -t 1 ]; then
     local ncolors=$(tput colors)
     if [ -n "$ncolors" -a "$ncolors" -ge 8 ]; then
       font_normal=$(tput sgr0)
       font_bold=$(tput bold)
-      font_underline=$(tput smul)
-      font_standout=$(tput smso)
     fi
   fi
 
   function BOLD {
     printf "${font_bold}$*${font_normal}"
-  }
-
-  function UL {
-    printf "${font_underline}$*${font_normal}"
   }
 
   # display fatal message and exit
@@ -69,11 +61,6 @@ function __main {
   # determine fully-qualified base directory
   basedir=$(dirname $0)
   basedir=$(cd "$basedir" && pwd)
-
-  function self {
-    log "Running: $0 $*"
-    $0 "$@"
-  }
 
   # display usage and exit
   function usage {
@@ -154,9 +141,7 @@ options:
   find "$releasedir"
 
   setup="$releasedir/setup.sh"
-  export COMMANDO_PROJECT="$basedir"
-  export COMMANDO_VERBOSE="$verbose"
-  bash "$setup"
+  source "$setup"
 
   rm -rf "$tmpdir"
 }
