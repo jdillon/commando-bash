@@ -8,7 +8,7 @@
 # Project  - $basedir/.$progname/config.sh
 # User     - $basedir/$progname.rc
 #
-# NOTE: $progname resolves to whatever the name of the commando script is (sans .sh)
+# NOTE: $progname resolves to whatever the name of the commando script is (sans .sh suffix)
 #
 
 set -o errexit
