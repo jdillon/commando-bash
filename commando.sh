@@ -178,6 +178,7 @@ function __command_system {
 function __main {
   # resolve this script name
   basename=$(basename $0)
+  progname=$(basename -s .sh ${basename})
 
   # determine fully-qualified base directory
   basedir=$(dirname $0)
@@ -263,7 +264,7 @@ To see available commands:
     fi
   fi
 
-  load_modules ".$basename/library" ".$basename/config.sh" "$basename.rc"
+  load_modules ".$progname/library" ".$progname/config.sh" "$progname.rc"
 
   # display usage if no arguments, else execute command
   if ${have_command}; then
