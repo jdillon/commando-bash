@@ -14,4 +14,9 @@ function __setup {
 
   cp -v "$releasedir/commando.sh" "$projectdir"
   cp -vr "$releasedir/.commando" "$projectdir/"
+
+  # HACK: testing
+  echo '----8<---'
+  find "$projectdir"
+  echo '---->----'
 }
