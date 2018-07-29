@@ -50,7 +50,7 @@ function __output_helpers {
   }
 
   # display verbose message if verbose enabled
-  verbose='false'
+  verbose="$COMMANDO_VERBOSE"
   function log {
     if [ ${verbose} = 'true' ]; then
       printf "$(BOLD VERBOSE): $*\n" >&2
