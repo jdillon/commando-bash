@@ -13,7 +13,5 @@ function __setup {
   fi
 
   cp -v "$releasedir/commando.sh" "$projectdir"
-  
-  mkdir -v "$projectdir/.commando"
   cp -vr "$releasedir/.commando" "$projectdir/"
 }
