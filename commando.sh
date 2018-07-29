@@ -4,11 +4,11 @@
 #
 # Reads configuration from a few locations:
 #
-# Commands - $basedir/.$basename/commands/*.sh
-# Project  - $basedir/.$basename/config.sh
-# User     - $basedir/$basename.rc
+# Commands - $basedir/.$progname/commands/*.sh
+# Project  - $basedir/.$progname/config.sh
+# User     - $basedir/$progname.rc
 #
-# NOTE: $basename resolves to whatever the name of the commando script is.
+# NOTE: $progname resolves to whatever the name of the commando script is (sans .sh)
 #
 
 set -o errexit
@@ -253,6 +253,7 @@ To see available commands:
   if ${verbose}; then
     log "Bash: $BASH $BASH_VERSINFO $BASH_VERSION"
     log "Base name: $basename"
+    log "Program name: $progname"
     log "Base directory: $basedir"
 
     # explain command-line
