@@ -33,7 +33,7 @@ function __help_module {
     # resolve command function
     set +o nounset
     local fn="${defined_commands[$command]}"
-    set +o nounset
+    set -o nounset
 
     if [ -z "$fn" ]; then
       die "Invalid command: $command"
@@ -67,14 +67,18 @@ $(BOLD OPTIONS)
     printf '\n'
   }
 
+  # FIXME: need better support for required tools
+  wc_tool='gwc' # GNU wc
+  tr_tool='tr'
+
   # display list of all commands
   function help_list_commands {
     # lookup all command names
     local commands=${!defined_commands[@]}
 
     # calculate max size of function, and adjust for display
-    local sorted=$(echo ${commands} | tr ' ' '\n' | sort)
-    local max_size=$(echo "$sorted" | wc --max-line-length)
+    local sorted=$(echo ${commands} | ${tr_tool} ' ' '\n' | sort)
+    local max_size=$(echo "$sorted" | ${wc_tool} --max-line-length)
     local col_size=$(expr ${max_size} + 4)
 
     printf '\nCommands:\n'

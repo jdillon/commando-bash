@@ -149,7 +149,7 @@ function __command_system {
     # resolve command function
     set +o nounset
     local fn="${defined_commands[$command]}"
-    set +o nounset
+    set -o nounset
 
     if [ -z "$fn" ]; then
       die "Invalid command: $command"
@@ -282,7 +282,7 @@ To see available commands:
 __output_helpers
 
 # compatibility check
-if [ "$BASH_VERSINFO" != '4' ]; then
+if [ "$BASH_VERSINFO" -lt '4' ]; then
   die "Incompatible Bash detected: $BASH $BASH_VERSINFO $BASH_VERSION"
 fi
 

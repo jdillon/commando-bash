@@ -9,8 +9,6 @@ function __setup {
   local verbose_options=''
   if ${verbose}; then
     verbose_options='-v'
-    log "Release directory: $releasedir"
-    log "Project directory: $projectdir"
   fi
 
   cp ${verbose_options} "$releasedir/commando.sh" "$projectdir"
