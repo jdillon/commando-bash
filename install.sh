@@ -59,7 +59,7 @@ function __main {
   basename=$(basename $0)
 
   # when fetched remotely avoid confusion with detcted basename
-  if [ "$basename" = "bash" ]; then
+  if [ "$basename" = 'bash' ]; then
     basename='install.sh'
   fi
 
