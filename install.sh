@@ -11,8 +11,8 @@ set -o nounset
 #
 
 function __output_helpers {
-  font_bold=''
-  font_normal=''
+  declare -g font_bold=''
+  declare -g font_normal=''
   if [ -t 1 ]; then
     local ncolors=$(tput colors)
     if [ -n "$ncolors" -a "$ncolors" -ge 8 ]; then
@@ -41,12 +41,23 @@ function __output_helpers {
     printf "$(BOLD WARN): $*\n" >&2
   }
 
+  # display message
+  function info {
+    printf "$(BOLD INFO): $*\n" >&2
+  }
+
   # display verbose message if verbose enabled
-  verbose='false'
+  declare -g verbose='false'
   function log {
     if [ ${verbose} = 'true' ]; then
       printf "$(BOLD VERBOSE): $*\n" >&2
     fi
+  }
+
+  function snip_output {
+    log '----8<----'
+    $@
+    log '---->8----'
   }
 }
 
@@ -56,7 +67,7 @@ function __output_helpers {
 
 function __main {
   # resolve this script name
-  basename=$(basename $0)
+  declare -g basename=$(basename $0)
 
   # when fetched remotely avoid confusion with detcted basename
   if [ "$basename" = 'bash' ]; then
@@ -64,7 +75,7 @@ function __main {
   fi
 
   # determine fully-qualified base directory
-  basedir=$(dirname $0)
+  declare -g basedir=$(dirname $0)
   basedir=$(cd "$basedir" && pwd)
 
   # stable defaults for usage display
@@ -78,7 +89,10 @@ function __main {
 
   # display usage and exit
   function usage {
-    printf "\nusage: $basename [options]
+    printf "
+Commando Installer
+
+usage: $basename [options]
 
 options:
   -h,--help             Show usage
@@ -177,9 +191,7 @@ options:
   fi
 
   if ${verbose}; then
-    log '----8<----'
-    find "$releasedir" -type f ! -path "*/.git*"
-    log '---->8----'
+    snip_output find "$releasedir" -type f ! -path "*/.git*"
   fi
 
   source "$setup"

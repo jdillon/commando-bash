@@ -19,10 +19,10 @@ set -o nounset
 #
 
 function __output_helpers {
-  font_bold=''
-  font_normal=''
-  font_underline=''
-  font_standout=''
+  declare -g font_bold=''
+  declare -g font_normal=''
+  declare -g font_underline=''
+  declare -g font_standout=''
   if [ -t 1 ]; then
     local ncolors=$(tput colors)
     if [ -n "$ncolors" -a "$ncolors" -ge 8 ]; then
@@ -57,8 +57,13 @@ function __output_helpers {
     printf "$(BOLD WARN): $*\n" >&2
   }
 
+  # display message
+  function info {
+    printf "$(BOLD INFO): $*\n" >&2
+  }
+
   # display verbose message if verbose enabled
-  verbose='false'
+  declare -g verbose='false'
   function log {
     if [ ${verbose} = 'true' ]; then
       printf "$(BOLD VERBOSE): $*\n" >&2
@@ -77,7 +82,7 @@ function __module_system {
   function load_module {
     local script="$1"
     if [ -f "$script" ]; then
-      library_name="$(basename $script)"
+      local library_name="$(basename $script)"
       log "Load module: $library_name -> $script"
       source "$script" "$library_name"
       loaded_modules[$library_name]="$script"
@@ -177,11 +182,11 @@ function __command_system {
 
 function __main {
   # resolve this script name
-  basename=$(basename $0)
-  progname=$(basename -s .sh ${basename})
+  declare -g basename=$(basename $0)
+  declare -g progname=$(basename -s .sh ${basename})
 
   # determine fully-qualified base directory
-  basedir=$(dirname $0)
+  declare -g basedir=$(dirname $0)
   basedir=$(cd "$basedir" && pwd)
 
   function self {

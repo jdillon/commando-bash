@@ -18,9 +18,13 @@ Add configurable commands to a Unix-based project w/o too many dependencies on f
 * basename
 * dirname
 * sort
+* rm
+* mkdir
+* ls
 
 ### install.sh
 
+* mktemp
 * curl
 * tar
 

@@ -22,6 +22,56 @@ function __util_module {
       fi
     fi
   }
+
+  function snip_output {
+    log '----8<----'
+    $@
+    log '---->8----'
+  }
+
+  function verbose_options {
+    if ${verbose}; then
+      echo '-v'
+    fi
+  }
+
+  resolve_executable 'rm' '' rm_executable
+
+  function rm {
+    ${rm_executable} $(verbose_options) "$@"
+  }
+
+  resolve_executable 'ln' '' ln_executable
+
+  function ln {
+    ${ln_executable} $(verbose_options) "$@"
+  }
+
+  resolve_executable 'mkdir' '' mkdir_executable
+
+  function mkdir {
+    ${mkdir_executable} $(verbose_options) "$@"
+  }
+
+  # make directories
+  function mkdirs {
+    local path="$1"
+
+    if [ ! -d "${path}" ]; then
+      log "Creating dir: ${path}"
+      snip_output mkdir -p "${path}"
+    fi
+  }
+
+  # delete directories
+  function rmdirs {
+    local path="$1"
+
+    if [ -d "${path}" ]; then
+      log "Deleting dir: ${path}"
+      snip_output rm -rf "${path}"
+    fi
+  }
 }
 
 define_module __util_module "$@"
