@@ -11,14 +11,18 @@ Add configurable commands to a Unix-based project w/o too many dependencies on f
 ### Tools
 
 * find
-* wc
+* awk
 * tr
 * printf
+* tput
+* basename
+* dirname
+* sort
 
 ### install.sh
 
-* cURL
-* GNU tar
+* curl
+* tar
 
 ## Features
 

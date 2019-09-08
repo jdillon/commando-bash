@@ -67,18 +67,19 @@ $(BOLD OPTIONS)
     printf '\n'
   }
 
-  # FIXME: need better support for required tools
-  wc_tool='gwc' # GNU wc
-  tr_tool='tr'
+  # determine maximum line-length of input
+  function max_line_length {
+    awk 'length > max_length { max_length = length } END { print max_length }' -
+  }
 
   # display list of all commands
   function help_list_commands {
     # lookup all command names
     local commands=${!defined_commands[@]}
 
-    # calculate max size of function, and adjust for display
-    local sorted=$(echo ${commands} | ${tr_tool} ' ' '\n' | sort)
-    local max_size=$(echo "$sorted" | ${wc_tool} --max-line-length)
+    # calculate max length of command name, and adjust for display
+    local sorted=$(echo ${commands} | tr ' ' '\n' | sort)
+    local max_size=$(echo "$sorted" | max_line_length)
     local col_size=$(expr ${max_size} + 4)
 
     printf '\nCommands:\n'
