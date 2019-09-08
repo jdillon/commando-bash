@@ -3,10 +3,19 @@
 #
 
 function __util_module {
-  # complain if any arguments are given
-  function zero_arguments {
+  # puke if any arguments are given
+  function require_zero_arguments {
     if [ ${#@} != 0 ]; then
       die "Unexpected arguments: $@"
+    fi
+  }
+
+  # puke if missing configuration variable
+  function require_configuration {
+    local name=${1}
+    local value=${!name}
+    if [ -z "$value" ]; then
+      die "Missing configuration: $name"
     fi
   }
 

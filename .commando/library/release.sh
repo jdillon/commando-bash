@@ -93,13 +93,13 @@ $(BOLD HOOKS)
 
   define_command 'release' __release_command
 
-  release_prebuild_options='clean install --define test=skip'
+  declare -g release_prebuild_options='clean install --define test=skip'
 
   function release_prebuild {
     mvn ${release_prebuild_options}
   }
 
-  release_deploy_options='deploy --define test=skip'
+  declare -g release_deploy_options='deploy --define test=skip'
 
   function release_deploy {
     mvn ${release_deploy_options}

@@ -3,8 +3,8 @@
 #
 
 function __maven_module {
-  maven_executable=
-  maven_options=
+  declare -g maven_executable=
+  declare -g maven_options=
 
   function mvn {
     resolve_executable 'mvn' "$maven_executable" maven_executable

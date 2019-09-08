@@ -9,7 +9,7 @@ function __project_module {
 
   __rebuild_command_description='Rebuild project'
 
-  rebuild_options='clean install'
+  declare -g rebuild_options='clean install'
 
   function __rebuild_command {
     mvn ${rebuild_options} "$@"
@@ -34,8 +34,8 @@ $(BOLD CONFIGURATION)
   $(UL change_version_properties)   Optional set of properties to change
 '
 
-  change_version_artifacts=
-  change_version_properties=
+  declare -g change_version_artifacts=
+  declare -g change_version_properties=
 
   function __change_version_command {
     set +o nounset
@@ -99,13 +99,13 @@ $(BOLD HOOKS)
 
   define_command 'license-headers' __license_headers_command
 
-  license_check_options='--activate-profiles license-check --non-recursive'
+  declare -g license_check_options='--activate-profiles license-check --non-recursive'
 
   function license_check {
     mvn ${license_check_options} $*
   }
 
-  license_format_options='--activate-profiles license-format --non-recursive'
+  declare -g license_format_options='--activate-profiles license-format --non-recursive'
 
   function license_format {
     mvn ${license_format_options} $*

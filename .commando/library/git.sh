@@ -3,8 +3,8 @@
 #
 
 function __git_module {
-  git_executable='git'
-  git_options=''
+  declare -g git_executable='git'
+  declare -g git_options=
 
   function git {
     resolve_executable 'git' "$git_executable" git_executable
