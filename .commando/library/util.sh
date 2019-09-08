@@ -3,6 +3,13 @@
 #
 
 function __util_module {
+  # complain if any arguments are given
+  function zero_arguments {
+    if [ ${#@} != 0 ]; then
+      die "Unexpected arguments: $@"
+    fi
+  }
+
   # resolve an executable
   function resolve_executable {
     local name="$1"
@@ -23,6 +30,7 @@ function __util_module {
     fi
   }
 
+  # wrap output of command with snip markers
   function snip_output {
     log '----8<----'
     $@
