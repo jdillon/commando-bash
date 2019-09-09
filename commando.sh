@@ -29,6 +29,7 @@ function __output_helpers {
   declare -g font_normal=''
   declare -g font_underline=''
   declare -g font_standout=''
+
   if [ -t 1 ]; then
     local ncolors=$(tput colors)
     if [ -n "$ncolors" -a "$ncolors" -ge 8 ]; then

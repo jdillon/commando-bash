@@ -29,11 +29,26 @@ function __util_module {
     fi
   }
 
+  declare -gA executables
+
   # resolve an executable
   function resolve_executable {
     local name="$1"
-    local executable="$2"
-    local rvar="$3"
+    local var="$2"
+
+    log "Resolve executable: $name -> \$$var"
+
+    # if already resolved, then skip
+    set +o nounset
+    local resolved="${executables[$name]}"
+    set -o nounset
+    if [ -n "$resolved" ]; then
+      log "Already resolved: $name -> $resolved"
+      return
+    fi
+
+    local executable
+    eval executable="\$$var"
 
     if [ ! -x "$executable" ]; then
       set +o errexit
@@ -42,52 +57,38 @@ function __util_module {
 
       if [ -x "$executable" ]; then
         log "Resolved executable: $name -> $executable"
-        eval $rvar="$executable"
+        eval $var="$executable"
       else
         die "Unable to resolve executable: $name"
       fi
     fi
+
+    executables[$name]="$executable"
   }
 
   # wrap output of command with snip markers
   function snip_output {
     log '----8<----'
-    $@
+    "${@}"
     log '---->8----'
   }
 
-  function verbose_options {
+  #
+  # Standard executables
+  #
+
+  # standard verbose options when verbose enabled
+  function __verbose_options {
     if ${verbose}; then
       echo '-v'
     fi
   }
 
-  resolve_executable 'rm' '' rm_executable
-
+  # rm
+  declare -g rm_executable='rm'
   function rm {
-    "${rm_executable}" $(verbose_options) "$@"
-  }
-
-  resolve_executable 'ln' '' ln_executable
-
-  function ln {
-    "${ln_executable}" $(verbose_options) "$@"
-  }
-
-  resolve_executable 'mkdir' '' mkdir_executable
-
-  function mkdir {
-    "${mkdir_executable}" $(verbose_options) "$@"
-  }
-
-  # make directories
-  function mkdirs {
-    local path="$1"
-
-    if [ ! -d "${path}" ]; then
-      log "Creating dir: ${path}"
-      snip_output mkdir -p "${path}"
-    fi
+    resolve_executable 'rm' rm_executable
+    "${rm_executable}" $(__verbose_options) "$@"
   }
 
   # delete directories
@@ -100,9 +101,34 @@ function __util_module {
     fi
   }
 
-  resolve_executable 'awk' '' awk_executable
+  # ln
+  declare -g ln_executable='ln'
+  function ln {
+    resolve_executable 'ln' ln_executable
+    "${ln_executable}" $(__verbose_options) "$@"
+  }
 
+  # mkdir
+  declare -g mkdir_executable='mkdir'
+  function mkdir {
+    resolve_executable 'mkdir' mkdir_executable
+    "${mkdir_executable}" $(__verbose_options) "$@"
+  }
+
+  # make directories
+  function mkdirs {
+    local path="$1"
+
+    if [ ! -d "${path}" ]; then
+      log "Creating dir: ${path}"
+      snip_output mkdir -p "${path}"
+    fi
+  }
+
+  # awk
+  declare -g awk_executable='awk'
   function awk {
+    resolve_executable 'awk' awk_executable
     "${awk_executable}" "$@"
   }
 }

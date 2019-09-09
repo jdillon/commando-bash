@@ -10,6 +10,7 @@ Add configurable commands to a Unix-based project w/o too many dependencies on f
 
 ### Tools
 
+* which
 * find
 * awk
 * tr
@@ -21,6 +22,7 @@ Add configurable commands to a Unix-based project w/o too many dependencies on f
 * rm
 * mkdir
 * ls
+* expr
 
 ### install.sh
 
