@@ -3,6 +3,8 @@
 #
 
 function __git_module {
+  require_module util.sh
+
   declare -g git_executable='git'
   declare -g git_options=
 
@@ -13,7 +15,5 @@ function __git_module {
     "$git_executable" ${git_options} "$@"
   }
 }
-
-require_module util.sh
 
 define_module __git_module "$@"

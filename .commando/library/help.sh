@@ -3,12 +3,39 @@
 #
 
 function __help_module {
+  require_module util.sh
+
+  declare -gA help_descriptions
+  declare -gA help_syntaxs
+  declare -gA help_docs
+
+  function help_define_description {
+    local command=${1}; shift
+    local description="$*"
+    log "Define $command help description: $description"
+    help_descriptions[$command]="$description"
+  }
+
+  function help_define_syntax {
+    local command=${1}; shift
+    local syntax="$*"
+    log "Define $command help syntax: $syntax"
+    help_syntaxs[$command]="$syntax"
+  }
+
+  function help_define_doc {
+    local command=${1}; shift
+    local usage="$*"
+    log "Define $command help usage: $usage"
+    help_docs[$command]="$usage"
+  }
+
   #
   # help
   #
 
-  __help_command_description='Display help for command or list commands'
-  __help_command_syntax='[command]'
+  help_define_description help 'Display help for command or list commands'
+  help_define_syntax help '[command]'
 
   function __help_command {
     set +o nounset
@@ -34,16 +61,15 @@ function __help_module {
     set +o nounset
     local fn="${defined_commands[$command]}"
     set -o nounset
-
     if [ -z "$fn" ]; then
       die "Invalid command: $command"
     fi
 
     # lookup command attributes
     set +o nounset
-    eval description=\$${fn}_description
-    eval syntax=\$${fn}_syntax
-    eval help=\$${fn}_help
+    local description="${help_descriptions[$command]}"
+    local syntax="${help_syntaxs[$command]}"
+    local usage="${help_docs[$command]}"
     set -o nounset
 
     if [ -n "$description" ]; then
@@ -53,17 +79,17 @@ function __help_module {
     printf "\n$(BOLD USAGE)\n\n"
     printf "  $basename $command $syntax\n\n"
 
-    # if no help is present use default
-    if [ -z "$help" ]; then
-      help='\
+    # if no usage is present use default
+    if [ -z "$usage" ]; then
+      usage='\
 $(BOLD OPTIONS)
 
   -h,--help   Show usage
 '
     fi
 
-    # late render help text
-    eval "printf \"$help\""
+    # late render usagse text
+    eval "printf \"$usage\""
     printf '\n'
   }
 
@@ -84,11 +110,9 @@ $(BOLD OPTIONS)
 
     printf '\nCommands:\n'
     for command in ${sorted}; do
-      local fn="${defined_commands[$command]}"
-
       # lookup command description
       set +o nounset
-      eval description=\$${fn}_description
+      local description="${help_descriptions[$command]}"
       set -o nounset
 
       # $(BOLD) helper messes up printf ability to format

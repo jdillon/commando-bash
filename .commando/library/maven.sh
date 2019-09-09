@@ -3,6 +3,8 @@
 #
 
 function __maven_module {
+  require_module util.sh
+
   declare -g maven_executable=
   declare -g maven_options=
 
@@ -12,7 +14,5 @@ function __maven_module {
     "$maven_executable" ${maven_options} "$@"
   }
 }
-
-require_module util.sh
 
 define_module __maven_module "$@"

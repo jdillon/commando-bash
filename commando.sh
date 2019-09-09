@@ -14,6 +14,12 @@
 set -o errexit
 set -o nounset
 
+# compatibility check
+if [ "$BASH_VERSINFO" -lt '4' ]; then
+  echo "ERROR: Incompatible Bash detected: $BASH $BASH_VERSINFO $BASH_VERSION"
+  exit 2
+fi
+
 #
 # Output
 #
@@ -76,19 +82,15 @@ function __output_helpers {
 #
 
 function __module_system {
-  declare -gA loaded_modules
   declare -gA defined_modules
+  declare -gA loaded_modules
+  declare -gA prepared_modules
 
-  function load_module {
-    local script="$1"
-    if [ -f "$script" ]; then
-      local library_name="$(basename $script)"
-      log "Load module: $library_name -> $script"
-      source "$script" "$library_name"
-      loaded_modules[$library_name]="$script"
-    else
-      warn "Missing: $script"
-    fi
+  function define_module {
+    local fn="$1"
+    local module_name="$2"
+    log "Define module: $module_name -> $fn"
+    defined_modules[$module_name]=${fn}
   }
 
   function load_modules {
@@ -105,17 +107,47 @@ function __module_system {
     log "Loaded modules: ${!loaded_modules[@]}"
   }
 
-  function define_module {
-    local fn="$1"
-    local library_name="$2"
-    log "Define module: $library_name -> $fn"
+  function load_module {
+    local script="$1"
+    if [ -f "$script" ]; then
+      local module_name="$(basename $script)"
+      log "Load module: $module_name -> $script"
+      source "$script" "$module_name"
+      loaded_modules[$module_name]="$script"
+    else
+      warn "Missing: $script"
+    fi
+  }
+
+  function prepare_modules {
+    for module_name in ${!loaded_modules[@]}; do
+      prepare_module ${module_name}
+    done
+  }
+
+  function prepare_module {
+    local module_name=${1}
+    log "Prepare module: $module_name"
+
+    # resolve and invoke module initializer
+    local fn=${defined_modules[$module_name]}
     ${fn}
-    defined_modules[$library_name]="$fn"
+
+    prepared_modules[${module_name}]=${fn}
   }
 
   function require_module {
-    local script="$1"
-    log "Require module: $script"
+    local module_name="$1"
+    log "Require module: $module_name"
+
+    # skip if module has already been prepared
+    set +o nounset
+    if [ -n "${prepared_modules[${module_name}]}" ]; then
+      return
+    fi
+    set -o nounset
+
+    prepare_module $module_name
   }
 }
 
@@ -189,9 +221,10 @@ function __main {
   declare -g basedir=$(dirname $0)
   basedir=$(cd "$basedir" && pwd)
 
+  # re-run self with arguments
   function self {
     log "Running: $0 $*"
-    $0 "$@"
+    "$0" "$@"
   }
 
   # display usage and exit
@@ -270,7 +303,11 @@ To see available commands:
     fi
   fi
 
-  load_modules ".$progname/library" ".$progname/config.sh" "$progname.rc"
+  load_modules ".$progname/library" ".$progname/config.sh"
+  prepare_modules
+
+  # load user customizations
+  source "$progname.rc"
 
   # display usage if no arguments, else execute command
   if ${have_command}; then
@@ -285,10 +322,5 @@ To see available commands:
 #
 
 __output_helpers
-
-# compatibility check
-if [ "$BASH_VERSINFO" -lt '4' ]; then
-  die "Incompatible Bash detected: $BASH $BASH_VERSINFO $BASH_VERSION"
-fi
 
 __main "$@"

@@ -3,11 +3,13 @@
 #
 
 function __project_module {
+  require_module maven.sh
+
   #
   # rebuild
   #
 
-  __rebuild_command_description='Rebuild project'
+  help_define_description rebuild 'Rebuild project'
 
   declare -g rebuild_options='clean install'
 
@@ -21,9 +23,9 @@ function __project_module {
   # change-version
   #
 
-  __change_version_command_description='Change project version'
-  __change_version_command_syntax='<version>'
-  __change_version_command_help='\
+  help_define_description change-version 'Change project version'
+  help_define_syntax change-version '<version>'
+  help_define_doc change-version '\
 $(BOLD OPTIONS)
 
   -h,--help   Show usage
@@ -53,13 +55,15 @@ $(BOLD CONFIGURATION)
       -DnewVersion=${newVersion}
   }
 
+  define_command 'change-version' __change_version_command
+
   #
   # license-headers
   #
 
-  __license_headers_command_description='Manage project license headers'
-  __license_headers_command_syntax='<check|format>'
-  __license_headers_command_help='\
+  help_define_description license-headers 'Manage project license headers'
+  help_define_syntax license-headers '<check|format>'
+  help_define_doc license-headers '\
 $(BOLD OPTIONS)
 
   -h,--help   Show usage
@@ -74,8 +78,6 @@ $(BOLD HOOKS)
   $(UL license_check)   Hook called to perform license check
   $(UL license_format)  Hook called to perform license format
 '
-
-  define_command 'change-version' __change_version_command
 
   function __license_headers_command {
     set +o nounset
@@ -111,7 +113,5 @@ $(BOLD HOOKS)
     mvn ${license_format_options} $*
   }
 }
-
-require_module maven.sh
 
 define_module __project_module "$@"

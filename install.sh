@@ -6,6 +6,12 @@
 set -o errexit
 set -o nounset
 
+# compatibility check
+if [ "$BASH_VERSINFO" -lt '4' ]; then
+  echo "ERROR: Incompatible Bash detected: $BASH $BASH_VERSINFO $BASH_VERSION"
+  exit 2
+fi
+
 #
 # Output
 #
@@ -163,6 +169,8 @@ options:
     log "Arguments: ${arguments[@]}"
   fi
 
+  info "Installing"
+
   if [[ ${baseurl} == file:* ]]; then
     # use local release distribution
     local releasedir=${baseurl:5}
@@ -175,7 +183,7 @@ options:
     local distdir="$tmpdir/dist"
     local releasedir="$distdir/commando-bash-$version"
 
-    log "Distribution archive: $distfile"
+    info "Distribution archive: $distfile"
     curl --location --silent --output "$distfile" "$disturl"
 
     log "Distribution directory: $distdir"
@@ -183,7 +191,7 @@ options:
     tar -xzf "$distfile" -C "$distdir"
   fi
 
-  log "Release directory: $releasedir"
+  info "Release directory: $releasedir"
 
   local setup="$releasedir/setup.sh"
   if [ ! -f ${setup} ]; then
@@ -194,10 +202,13 @@ options:
     snip_output find "$releasedir" -type f ! -path "*/.git*"
   fi
 
+  info "Setup"
   source "$setup"
   __setup "$releasedir" "$projectdir"
 
   rm -rf "$tmpdir"
+
+  info "Done"
 }
 
 #
@@ -205,10 +216,5 @@ options:
 #
 
 __output_helpers
-
-# compatibility check
-if [ "$BASH_VERSINFO" -lt '4' ]; then
-  die "Incompatible Bash detected: $BASH $BASH_VERSINFO $BASH_VERSION"
-fi
 
 __main "$@"

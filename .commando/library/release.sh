@@ -3,13 +3,17 @@
 #
 
 function __release_module {
+  require_module git.sh
+  require_module maven.sh
+  require_module project.sh
+
   #
   # release
   #
 
-  __release_command_description='Release project'
-  __release_command_syntax='<version> <next-version> [options]'
-  __release_command_help='\
+  help_define_description release 'Release project'
+  help_define_syntax release '<version> <next-version> [options]'
+  help_define_doc release '\
 $(BOLD OPTIONS)
 
   -h,--help   Show usage
@@ -67,12 +71,12 @@ $(BOLD HOOKS)
     log "Current branch: $branch"
 
     # update version and tag
-    self change_version "$version"
+    run_command change-version "$version"
     git commit --all --message="update version: $version"
     git tag ${releaseTag}
 
     # update to next version
-    self change_version "$nextVersion"
+    run_command change-version "$nextVersion"
     git commit --all --message="update version: $nextVersion"
 
     # checkout release and sanity check
@@ -105,9 +109,5 @@ $(BOLD HOOKS)
     mvn ${release_deploy_options}
   }
 }
-
-require_module git.sh
-require_module maven.sh
-require_module project.sh
 
 define_module __release_module "$@"

@@ -3,6 +3,16 @@
 #
 
 function __util_module {
+  # puke if missing arguments
+  function require_arguments {
+    local count=${1}; shift
+    if [ ${#@} == 0 ]; then
+      die "Missing ${count} arguments"
+    elif [ ${#@} != ${count} ]; then
+      die "Unexpected arguments: $@"
+    fi
+  }
+
   # puke if any arguments are given
   function require_zero_arguments {
     if [ ${#@} != 0 ]; then
@@ -55,19 +65,19 @@ function __util_module {
   resolve_executable 'rm' '' rm_executable
 
   function rm {
-    ${rm_executable} $(verbose_options) "$@"
+    "${rm_executable}" $(verbose_options) "$@"
   }
 
   resolve_executable 'ln' '' ln_executable
 
   function ln {
-    ${ln_executable} $(verbose_options) "$@"
+    "${ln_executable}" $(verbose_options) "$@"
   }
 
   resolve_executable 'mkdir' '' mkdir_executable
 
   function mkdir {
-    ${mkdir_executable} $(verbose_options) "$@"
+    "${mkdir_executable}" $(verbose_options) "$@"
   }
 
   # make directories
@@ -88,6 +98,12 @@ function __util_module {
       log "Deleting dir: ${path}"
       snip_output rm -rf "${path}"
     fi
+  }
+
+  resolve_executable 'awk' '' awk_executable
+
+  function awk {
+    "${awk_executable}" "$@"
   }
 }
 
