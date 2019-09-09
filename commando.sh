@@ -54,6 +54,8 @@ function __output_helpers {
     exit 1
   }
 
+  # TODO: consider log_{error|warn|info|verbose|debug} naming
+
   # display error message
   function error {
     printf "$(BOLD ERROR): $*\n" >&2
