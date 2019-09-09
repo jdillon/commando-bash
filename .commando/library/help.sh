@@ -12,21 +12,21 @@ function __help_module {
   function help_define_description {
     local command=${1}; shift
     local description="$*"
-    log "Define $command help description: $description"
+    debug "Define $command help description: $description"
     help_descriptions[$command]="$description"
   }
 
   function help_define_syntax {
     local command=${1}; shift
     local syntax="$*"
-    log "Define $command help syntax: $syntax"
+    debug "Define $command help syntax: $syntax"
     help_syntaxs[$command]="$syntax"
   }
 
   function help_define_doc {
     local command=${1}; shift
     local usage="$*"
-    log "Define $command help usage: $usage"
+    debug "Define $command help usage: $usage"
     help_docs[$command]="$usage"
   }
 

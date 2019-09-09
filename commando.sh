@@ -69,12 +69,27 @@ function __output_helpers {
     printf "$(BOLD INFO): $*\n" >&2
   }
 
-  # display verbose message if verbose enabled
+  # display verbose message if enabled
   declare -g verbose='false'
   function log {
     if [ ${verbose} = 'true' ]; then
       printf "$(BOLD VERBOSE): $*\n" >&2
     fi
+  }
+
+  # display debug message if enabled
+  declare -g debug='false'
+  function debug {
+    if [ ${debug} = 'true' ]; then
+      printf "$(BOLD DEBUG): $*\n" >&2
+    fi
+  }
+
+  # wrap output of command with snip markers
+  function snip_output {
+    echo '----8<----'
+    "${@}"
+    echo '---->8----'
   }
 }
 
@@ -90,7 +105,7 @@ function __module_system {
   function define_module {
     local fn="$1"
     local module_name="$2"
-    log "Define module: $module_name -> $fn"
+    debug "Define module: $module_name -> $fn"
     defined_modules[$module_name]=${fn}
   }
 
@@ -105,14 +120,14 @@ function __module_system {
       fi
     done
 
-    log "Loaded modules: ${!loaded_modules[@]}"
+    debug "Loaded modules: ${!loaded_modules[@]}"
   }
 
   function load_module {
     local script="$1"
     if [ -f "$script" ]; then
       local module_name="$(basename $script)"
-      log "Load module: $module_name -> $script"
+      debug "Load module: $module_name -> $script"
       source "$script" "$module_name"
       loaded_modules[$module_name]="$script"
     else
@@ -124,11 +139,13 @@ function __module_system {
     for module_name in ${!loaded_modules[@]}; do
       prepare_module ${module_name}
     done
+
+    log "Prepared modules: ${!prepared_modules[@]}"
   }
 
   function prepare_module {
     local module_name=${1}
-    log "Prepare module: $module_name"
+    debug "Prepare module: $module_name"
 
     # resolve and invoke module initializer
     local fn=${defined_modules[$module_name]}
@@ -139,7 +156,7 @@ function __module_system {
 
   function require_module {
     local module_name="$1"
-    log "Require module: $module_name"
+    debug "Require module: $module_name"
 
     # skip if module has already been prepared
     set +o nounset
@@ -162,7 +179,7 @@ function __command_system {
   function define_command {
     local name=$1
     local fn=$2
-    log "Define command: $name -> $fn"
+    debug "Define command: $name -> $fn"
 
     # ensure given function is actually a function
     if [ "$(type -t $fn)" != 'function' ]; then
@@ -234,7 +251,8 @@ function __main {
 
 options:
   -h,--help       Show usage
-  -v,--verbose    Verbose output
+  -v,--verbose    Enable VERBOSE output
+  --debug         Enable DEBUG output
   --              Stop processing options
 
 To see available commands:
@@ -250,14 +268,18 @@ To see available commands:
   # parse options and build command-line (command + command-options)
   local -a command_line
   for opt in "$@"; do
-    local consume_remaining=false
+    local consume_remaining='false'
 
     case $opt in
       -h|--help)
         usage
         ;;
       -v|--verbose)
-        verbose=true
+        verbose='true'
+        shift
+        ;;
+      --debug)
+        debug='true'
         shift
         ;;
       -*)
@@ -265,10 +287,10 @@ To see available commands:
         ;;
       --)
         shift
-        consume_remaining=true
+        consume_remaining='true'
         ;;
       *)
-        consume_remaining=true
+        consume_remaining='true'
         ;;
     esac
 

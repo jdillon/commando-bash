@@ -53,7 +53,7 @@ function __output_helpers {
     printf "$(BOLD INFO): $*\n" >&2
   }
 
-  # display verbose message if verbose enabled
+  # display verbose message if enabled
   declare -g verbose='false'
   function log {
     if [ ${verbose} = 'true' ]; then
@@ -61,6 +61,15 @@ function __output_helpers {
     fi
   }
 
+  # display debug message if enabled
+  declare -g debug='false'
+  function debug {
+    if [ ${debug} = 'true' ]; then
+      printf "$(BOLD DEBUG): $*\n" >&2
+    fi
+  }
+
+  # wrap output of command with snip markers
   function snip_output {
     log '----8<----'
     $@
@@ -103,9 +112,9 @@ usage: $basename [options]
 
 options:
   -h,--help             Show usage
-  -v,--verbose          Verbose output; default: ${default_verbose}
-  --version <version>   Select version; default: ${default_version}
-  --baseurl <url>       Select base URL; default: ${default_baseurl}
+  -v,--verbose          Enable VERBOSE output; default: ${default_verbose}
+  --version <version>   Select release version; default: ${default_version}
+  --baseurl <url>       Select release base-URL; default: ${default_baseurl}
   --                    Stop processing options
 \n"
 
@@ -115,7 +124,7 @@ options:
   # parse options and collect arguments
   local -a arguments
   for opt in "$@"; do
-    local consume_remaining=false
+    local consume_remaining='false'
 
     case $opt in
       -h|--help)
@@ -123,7 +132,7 @@ options:
         ;;
       -v|--verbose)
         shift
-        verbose=true
+        verbose='true'
         ;;
       --baseurl)
         baseurl="$2"
@@ -138,10 +147,10 @@ options:
         ;;
       --)
         shift
-        consume_remaining=true
+        consume_remaining='true'
         ;;
       *)
-        consume_remaining=true
+        consume_remaining='true'
         ;;
     esac
 

@@ -36,14 +36,14 @@ function __util_module {
     local name="$1"
     local var="$2"
 
-    log "Resolve executable: $name -> \$$var"
+    debug "Resolve executable: $name -> \$$var"
 
     # if already resolved, then skip
     set +o nounset
     local resolved="${executables[$name]}"
     set -o nounset
     if [ -n "$resolved" ]; then
-      log "Already resolved: $name -> $resolved"
+      debug "Already resolved: $name -> $resolved"
       return
     fi
 
@@ -56,7 +56,7 @@ function __util_module {
       set -o errexit
 
       if [ -x "$executable" ]; then
-        log "Resolved executable: $name -> $executable"
+        debug "Resolved executable: $name -> $executable"
         eval $var="$executable"
       else
         die "Unable to resolve executable: $name"
@@ -66,20 +66,13 @@ function __util_module {
     executables[$name]="$executable"
   }
 
-  # wrap output of command with snip markers
-  function snip_output {
-    log '----8<----'
-    "${@}"
-    log '---->8----'
-  }
-
   #
   # Standard executables
   #
 
   # standard verbose options when verbose enabled
   function __verbose_options {
-    if ${verbose}; then
+    if [ ${verbose} == 'true' ]; then
       echo '-v'
     fi
   }
@@ -97,7 +90,11 @@ function __util_module {
 
     if [ -d "${path}" ]; then
       log "Deleting dir: ${path}"
-      snip_output rm -rf "${path}"
+      if [ ${verbose} == 'true' ]; then
+        snip_output rm -rf "${path}"
+      else
+        rm -rf "${path}"
+      fi
     fi
   }
 
@@ -121,7 +118,11 @@ function __util_module {
 
     if [ ! -d "${path}" ]; then
       log "Creating dir: ${path}"
-      snip_output mkdir -p "${path}"
+      if [ ${verbose} == 'true' ]; then
+        snip_output mkdir -p "${path}"
+      else
+        mkdir -p "${path}"
+      fi
     fi
   }
 
