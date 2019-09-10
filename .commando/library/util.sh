@@ -72,7 +72,7 @@ function __util_module {
 
   # standard verbose options when verbose enabled
   function __verbose_options {
-    if [ ${verbose} == 'true' ]; then
+    if ${verbose}; then
       echo '-v'
     fi
   }
@@ -90,10 +90,17 @@ function __util_module {
 
     if [ -d "${path}" ]; then
       log "Deleting dir: ${path}"
-      if [ ${verbose} == 'true' ]; then
+      if ${verbose}; then
         snip_output rm -rf "${path}"
       else
         rm -rf "${path}"
+      fi
+    elif [ -L "${path}" ]; then
+      log "Deleting dir (unlink): ${path}"
+      if ${verbose}; then
+        snip_output rm -rf "${path}"
+      else
+        rm -r "${path}"
       fi
     fi
   }
@@ -118,7 +125,7 @@ function __util_module {
 
     if [ ! -d "${path}" ]; then
       log "Creating dir: ${path}"
-      if [ ${verbose} == 'true' ]; then
+      if ${verbose}; then
         snip_output mkdir -p "${path}"
       else
         mkdir -p "${path}"
